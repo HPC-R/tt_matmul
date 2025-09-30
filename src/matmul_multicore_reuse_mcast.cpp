@@ -13,7 +13,9 @@
 #include "matmul_common/bmm_op.hpp"
 #include <algorithm>
 
+#include "tt-power.hpp"
 #include "utils.hpp"
+#include <omp.h>
 
 using namespace tt::constants;
 using namespace std;
@@ -466,26 +468,80 @@ void matmul_multicore_reuse_mcast(
         }
     }
 
+    double power_xfer_on=0.0, power_exec=0.0, power_xfer_off=0.0;
+
+    // file exposing the power value at a time
+    char filename[] = "/sys/bus/pci/devices/0000:65:00.0/hwmon/hwmon2/power1_input";
+    tt_power::TTP ttp(filename);
+
     /* Launch program & read in output buffer result into the host vector */
-	struct timeval start_time;
-    gettimeofday(&start_time, NULL);
-    EnqueueWriteBuffer(cq, src0_dram_buffer, a.data(), false);
-    EnqueueWriteBuffer(cq, src1_dram_buffer, b.data(), false);
-    Finish(cq);
-    double xfer_on_time=getElapsedTime(start_time);
+	struct timeval start_time;	
+	double xfer_on_time=0.0, exec_time=0.0, xfer_off_time=0.0;
 
-    gettimeofday(&start_time, NULL);
-    EnqueueProgram(cq, program, false);
-    Finish(cq);
-    double exec_time=getElapsedTime(start_time);
+    //char profile_xfer_on[] = "tt-power-xfer-on.txt";
+    //char profile_exec[] = "tt-power-exec.txt";
+    //char profile_xfer_off[] = "tt-power-xfer-off.txt";
 
-    gettimeofday(&start_time, NULL);
-    EnqueueReadBuffer(cq, dst_dram_buffer, output.data(), true);
-    Finish(cq);
-    double xfer_off_time=getElapsedTime(start_time);
+    bool stop_measurement = false;
+	//ttp.enableProfiling(profile_xfer_on);
+	#pragma omp parallel shared(stop_measurement, xfer_on_time, exec_time, xfer_off_time, power_xfer_on, power_exec, power_xfer_off) num_threads(2)
+    {   
+        int tid = omp_get_thread_num();
+        if(tid == 0) {
 
+			gettimeofday(&start_time, NULL);
+			EnqueueWriteBuffer(cq, src0_dram_buffer, a.data(), false);
+			EnqueueWriteBuffer(cq, src1_dram_buffer, b.data(), false);
+			Finish(cq);
+			xfer_on_time=getElapsedTime(start_time);
+
+	        stop_measurement=true;
+        } else {
+            power_xfer_on = ttp.getPower(stop_measurement);
+        }
+    }  
+
+    stop_measurement = false;
+	//ttp.enableProfiling(profile_exec);
+	ttp.reset();
+	#pragma omp parallel shared(stop_measurement, xfer_on_time, exec_time, xfer_off_time) num_threads(2)
+    {   
+        int tid = omp_get_thread_num();
+        if(tid == 0) {
+
+			gettimeofday(&start_time, NULL);
+			EnqueueProgram(cq, program, false);
+			Finish(cq);
+			exec_time=getElapsedTime(start_time);
+
+	        stop_measurement=true;
+        } else {
+            power_exec = ttp.getPower(stop_measurement);
+        }
+    }  
+
+    stop_measurement = false;
+	//ttp.enableProfiling(profile_xfer_off);
+	ttp.reset();
+	#pragma omp parallel shared(stop_measurement, xfer_on_time, exec_time, xfer_off_time) num_threads(2)
+    {   
+        int tid = omp_get_thread_num();
+        if(tid == 0) {
+
+			gettimeofday(&start_time, NULL);
+			EnqueueReadBuffer(cq, dst_dram_buffer, output.data(), true);
+			Finish(cq);
+			xfer_off_time=getElapsedTime(start_time);
+
+	        stop_measurement=true;
+        } else {
+            power_xfer_off = ttp.getPower(stop_measurement);
+        }
+    }  
+ 
     double total_time = xfer_on_time + exec_time + xfer_off_time;
     printf("Total time %.4f sec (%.4f sec xferOn, %.4f sec exec, %.4f sec xferOff)\n", total_time, xfer_on_time, exec_time, xfer_off_time);
+	printf("Power xferOn: %.3f, exec: %.3f, xferOff: %.3f\n", power_xfer_on, power_exec, power_xfer_off);
 }
 
 ///////////////////////////////////////
