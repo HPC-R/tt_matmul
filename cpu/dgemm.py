@@ -4,7 +4,7 @@ import time
 import argparse
 import math
 
-np.show_config()
+#np.show_config()
 
 def dgemm(M, N, K):
 	a = np.array(np.random.random((M, N)), dtype=np.double, order='C', copy=False)
