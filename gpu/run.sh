@@ -13,7 +13,6 @@ MATRIX_SIZES=(
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 export CUPY_CACHE_DIR=${SCRIPT_DIR}/.cupy/kernel_cache
-unset CUDA_VISIBLE_DEVICES
 
 echo "bench,M,N,K,reps,avg_time,gflops"
 for size in "${MATRIX_SIZES[@]}"; do

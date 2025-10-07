@@ -33,9 +33,7 @@ The default directory for `CUPY_CACHE_DIR` is the user's home directory. On the 
 export CUPY_CACHE_DIR=${SCRIPT_DIR}/.cupy/kernel_cache
 ```
 
-`unset CUDA_VISIBLE_DEVICES`: The env var was set to `0` by default. We unset this env var to avoid errors.
-
-The matmul.py and run.sh scripts will print results and performance results to the command line output. Run the script with:
+The matmul.py and run.sh scripts will print performance results to the command line output. Run the script with:
 ```
 ./run.sh &> run.log001
 ```
