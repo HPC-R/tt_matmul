@@ -42,4 +42,4 @@ if __name__=="__main__":
 
 	avg_time = bench(M, N, K, reps)
 	gflops = 2*M*N*K/(avg_time*1e9)
-	print(f"dgemm_python,{M},{N},{K},{reps},{avg_time:.6f},{gflops:.2f}")
+	print(f"dgemm-python,{M},{N},{K},{reps},{avg_time:.6f},{gflops:.2f}")
