@@ -9,7 +9,7 @@ MATRIX_SIZES=(
     "3584 3072 768"
 )
 
-echo "dgemm_python,M,N,K,reps,avg_time,gflops"
+echo "bench,M,N,K,reps,avg_time,gflops"
 for size in "${MATRIX_SIZES[@]}"; do
 	python3 dgemm.py ${size} ${REPS}
 done
