@@ -1,0 +1,3 @@
+dgemm_python,M,N,K,reps,avg_time,gflops
+dgemm_python,128,128,128,100,0.000132,31.68
+dgemm_python,3584,3072,768,100,0.155660,108.64
