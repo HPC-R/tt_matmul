@@ -1,0 +1,51 @@
+bench,M,N,K,reps,avg_time,gflops
+10-07 17:10:14 INFO     = SPECIFICATION PHASE =
+10-07 17:10:14 INFO     The data type of operand A is 'float32', and that of operand B is 'float32'.
+10-07 17:10:14 INFO     The input operands' memory space is cuda, and the execution space is on device 0.
+10-07 17:10:14 INFO     The specified stream for the Matmul ctor is <ExternalStream 0 (device -1)>.
+10-07 17:10:14 INFO     The memory limit is 12.61 GiB.
+10-07 17:10:19 INFO     The scale type is 'float32'.
+10-07 17:10:19 INFO     The data type for the result D is 'float32'.
+10-07 17:10:19 INFO     The compute type is COMPUTE_32F_FAST_TF32.
+10-07 17:10:19 INFO     The matrix multiplication attributes are M = 128, N = 128, and K = 128.
+10-07 17:10:19 INFO     The batch count is 1, and the batch shape is [] with batch axis order ().
+10-07 17:10:19 INFO     The Matmul operation has been created.
+10-07 17:10:19 INFO     = PLANNING PHASE =
+10-07 17:10:19 INFO     The specified stream for the matrix multiplication plan is <ExternalStream 0 (device -1)>.
+10-07 17:10:19 INFO     The base matrix multiplication FLOP count is 4.194 MFLOP.
+10-07 17:10:19 INFO     The layout order for the result D is ROW, with LD 128, and batch offset 0.
+10-07 17:10:19 INFO     Starting matrix multiplication planning...
+10-07 17:10:19 INFO     The plan found 1 suitable algorithms within the requested limit of 1 algorithms, with a workspace requirement of 0.00 B.
+10-07 17:10:19 INFO     The matrix multiplication planning phase took 351.974 ms to complete.
+10-07 17:10:19 INFO     = EXECUTION PHASE =
+10-07 17:10:19 INFO     The specified stream for execute() is <ExternalStream 0 (device -1)>.
+10-07 17:10:19 INFO     The highest ranked algorithm in the plan (algorithm id = 1) will be used.
+10-07 17:10:19 INFO     Starting matrix multiplication...
+10-07 17:10:19 INFO     This call is non-blocking and will return immediately after the operation is launched on the device.
+10-07 17:10:19 INFO     The Matmul object's resources have been released.
+matmul-float32-nvmath-python-stateless,128,128,128,1,5.682884,0.00
+10-07 17:10:27 INFO     = SPECIFICATION PHASE =
+10-07 17:10:27 INFO     The data type of operand A is 'float32', and that of operand B is 'float32'.
+10-07 17:10:27 INFO     The input operands' memory space is cuda, and the execution space is on device 0.
+10-07 17:10:27 INFO     The specified stream for the Matmul ctor is <ExternalStream 0 (device -1)>.
+10-07 17:10:27 INFO     The memory limit is 12.61 GiB.
+10-07 17:10:27 INFO     The scale type is 'float32'.
+10-07 17:10:27 INFO     The data type for the result D is 'float32'.
+10-07 17:10:27 INFO     The compute type is COMPUTE_32F_FAST_TF32.
+10-07 17:10:27 INFO     The matrix multiplication attributes are M = 3584, N = 3072, and K = 768.
+10-07 17:10:27 INFO     The batch count is 1, and the batch shape is [] with batch axis order ().
+10-07 17:10:27 INFO     The Matmul operation has been created.
+10-07 17:10:27 INFO     = PLANNING PHASE =
+10-07 17:10:27 INFO     The specified stream for the matrix multiplication plan is <ExternalStream 0 (device -1)>.
+10-07 17:10:27 INFO     The base matrix multiplication FLOP count is 16.911 GFLOP.
+10-07 17:10:27 INFO     The layout order for the result D is ROW, with LD 3072, and batch offset 0.
+10-07 17:10:27 INFO     Starting matrix multiplication planning...
+10-07 17:10:27 INFO     The plan found 1 suitable algorithms within the requested limit of 1 algorithms, with a workspace requirement of 0.00 B.
+10-07 17:10:27 INFO     The matrix multiplication planning phase took 0.382 ms to complete.
+10-07 17:10:27 INFO     = EXECUTION PHASE =
+10-07 17:10:27 INFO     The specified stream for execute() is <ExternalStream 0 (device -1)>.
+10-07 17:10:27 INFO     The highest ranked algorithm in the plan (algorithm id = 0) will be used.
+10-07 17:10:27 INFO     Starting matrix multiplication...
+10-07 17:10:27 INFO     This call is non-blocking and will return immediately after the operation is launched on the device.
+10-07 17:10:27 INFO     The Matmul object's resources have been released.
+matmul-float32-nvmath-python-stateless,3584,3072,768,1,0.313959,53.87
