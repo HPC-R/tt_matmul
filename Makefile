@@ -9,7 +9,7 @@ TT_INC  := -I$(TT_METAL_HOME)/tt_metal/api \
            -I$(TT_METAL_HOME)/tt_metal/hostdevcommon/api/ \
            -I$(TT_METAL_HOME)/tt_metal/third_party/tracy/public
 
-INCLUDES := -I./tt-power/tt-power -I/opt/llvm-17.0.6-omp 
+INCLUDES := -I./tt_power/tt_power -I/opt/llvm-17.0.6-omp 
 
 CFLAGS  := $(TT_INC) $(INCLUDES) -O3 -Wno-int-to-pointer-cast -stdlib=libc++ -mavx2 -fPIC \
            -DFMT_HEADER_ONLY -fvisibility-inlines-hidden -fno-lto -DARCH_WORMHOLE \

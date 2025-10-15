@@ -16,6 +16,7 @@
 #include "tt-power.hpp"
 #include "utils.hpp"
 #include <omp.h>
+#include <fstream>
 
 using namespace tt::constants;
 using namespace std;
@@ -541,7 +542,37 @@ void matmul_multicore_reuse_mcast(
  
     double total_time = xfer_on_time + exec_time + xfer_off_time;
     printf("Total time %.4f sec (%.4f sec xferOn, %.4f sec exec, %.4f sec xferOff)\n", total_time, xfer_on_time, exec_time, xfer_off_time);
-	printf("Power xferOn: %.3f, exec: %.3f, xferOff: %.3f\n", power_xfer_on, power_exec, power_xfer_off);
+    printf("Power xferOn: %.3f, exec: %.3f, xferOff: %.3f\n", power_xfer_on, power_exec, power_xfer_off);
+    printf("Energy xferOn: %.3f J, exec: %.3f J, xferOff: %.3f J\n", power_xfer_on*xfer_on_time, power_exec*exec_time, power_xfer_off*xfer_off_time);
+
+    double energy_xfer_on = power_xfer_on * xfer_on_time;
+    double energy_exec = power_exec * exec_time;
+    double energy_xfer_off = power_xfer_off * xfer_off_time;
+    double total_energy = energy_xfer_on + energy_exec + energy_xfer_off;
+
+    //Write dynamically defined filename, total_time, and power_exec to a file
+    std::ofstream outfile("perf_constantexpr.csv", std::ios_base::app);
+    if (outfile.is_open()) {
+        outfile << __FILE__ << "," << M
+                            << "," << N
+                            << "," << K
+                            << "," << B
+                            << "," << std::fixed << std::setprecision(3) << total_time
+                            << "," << std::fixed << std::setprecision(3) << xfer_on_time
+                            << "," << std::fixed << std::setprecision(3) << exec_time
+                            << "," << std::fixed << std::setprecision(3) << xfer_off_time 
+                            << "," << std::fixed << std::setprecision(3) << power_xfer_on
+                            << "," << std::fixed << std::setprecision(3) << power_exec
+                            << "," << std::fixed << std::setprecision(3) << power_xfer_off
+                            << "," << std::fixed << std::setprecision(3) << total_energy
+                            << "," << std::fixed << std::setprecision(3) << energy_xfer_on
+                            << "," << std::fixed << std::setprecision(3) << energy_exec
+                            << "," << std::fixed << std::setprecision(3) << energy_xfer_off
+                            << std::endl;
+        outfile.close();
+    } else {
+        std::cerr << "Failed to open file for writing metrics." << std::endl;
+    } 
 }
 
 ///////////////////////////////////////
@@ -565,9 +596,9 @@ int main() {
         // NOTE: Maximum number of tiles in output is 120 * 16^2 = 30,720 (eg. [1, 1, 5120, 6144])
 
         /* Create source data */
-        constexpr uint32_t M = 3584;  // user-defined
-        constexpr uint32_t N = 3072;  // user-defined
-        constexpr uint32_t K = 768;   // user-defined
+        constexpr uint32_t M = 640; //3584;  // user-defined
+        constexpr uint32_t N = 640; //3072;  // user-defined
+        constexpr uint32_t K = 640; //768;   // user-defined
         constexpr uint32_t B = 1;     // user-defined
 
         uint32_t Mt = M / TILE_HEIGHT;
