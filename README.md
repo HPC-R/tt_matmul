@@ -9,7 +9,7 @@ Benchmarking optimised matrix multiplication kernels on the [Tenstorrent Wormhol
 
 ## Build
 
-Clone the repository, initialise the `tt-power` submodule and build the code using the provided Makefile. Note, for power draw measurements, we require openMP for threading in the host code.
+Clone the repository, initialise the `tt_power` submodule and build the code using the provided Makefile. Note, for power draw measurements, we require openMP for threading in the host code.
 
 ```
 git clone git@github.com:markxio/tt-matmul.git
@@ -18,8 +18,16 @@ git submodule update
 make all
 ```
 
-## WIP
+Setup python for utils/average.py:
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-- per kernel, write perf, power, energy to csv
-- add kernel descriptions
-- add matrix size scaling
+## Run
+
+Call the run script which sets run arguments and writes performance data to `output/perf_avg.csv`. See the provided [run.sh](run.sh) script for details:
+```
+./run.sh
+```
