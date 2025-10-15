@@ -13,7 +13,7 @@
 #include "matmul_common/bmm_op.hpp"
 #include <algorithm>
 
-#include "tt-power.hpp"
+#include "tt_power.hpp"
 #include "utils.hpp"
 #include <omp.h>
 #include <fstream>
