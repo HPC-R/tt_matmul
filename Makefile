@@ -31,7 +31,8 @@ BIN_DIR := bin
 PROGRAMS := matmul_single_core \
             matmul_multi_core \
             matmul_multicore_reuse \
-            matmul_multicore_reuse_mcast
+            matmul_multicore_reuse_mcast \
+            matmul_multicore_reuse_mcast_args
 
 SRCS  := $(addprefix $(SRC_DIR)/,$(addsuffix .cpp,$(PROGRAMS)))
 OBJS  := $(SRCS:.cpp=.o)
