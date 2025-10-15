@@ -1,5 +1,5 @@
 [submodule "tt-power"]
-	path = tt-power
+	path = tt_power
 	url = git@github.com:markxio/tt-power.git
 [submodule "cpu/pyrapl"]
 	path = cpu/pyrapl
