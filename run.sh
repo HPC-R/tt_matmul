@@ -13,10 +13,25 @@ REPS=100
 # NOTE: Only supports matmuls where output is blocks of 16 x 16 tiles (ie. multiples of 16*32 x 16*32)
 # NOTE: Maximum number of tiles in output is 120 * 16^2 = 30,720 (eg. [1, 1, 5120, 6144])
 
-# M N K
+# Examples That Will Fail
+# 1024, 1024, 1024: too few tiles per block; invalid CoreRange
+# 256, 4096, 1024: underflows the core grid in M
+# 8192, 8192, 1024: exceeds the 30,720 tile output limit
+
+# supported matrices for the Wormhole matmul_multicore_reuse_mcast kernel are those where M, N, and K are multiples of 32, 
+# the resulting output (M×N) forms 16×16 tile blocks (multiples of 512), and the total number of output tiles <= 30,720.
+
+# M, N, K
 MATRIX_SIZES=(
+    "1536 1536 768"
+    "2048 2048 1024"
+    "3072 3584 1024"
     "3584 3072 768"
+    "5120 6144 2048"
 )
+# working
+#    "1536 1536 1024"
+#    "3584 3072 768"
 
 export LD_LIBRARY_PATH=/opt/llvm-17.0.6-omp:$LD_LIBRARY_PATH ;
 
