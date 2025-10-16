@@ -38,7 +38,7 @@ export LD_LIBRARY_PATH=/opt/llvm-17.0.6-omp:$LD_LIBRARY_PATH ;
 echo "filename,M,N,K,B,total_time,xfer_on_time,exec_time,xfer_off_time,power_xfer_on,power_exec,power_xfer_off,total_energy,energy_xfer_on,energy_exec" > $PERF_CSV
 for size in "${MATRIX_SIZES[@]}"; do
     read -r M N K <<< "$size"
-    for i in {1..$REPS}; do
+	for i in $(seq 1 $(($REPS))); do
     	$EXE $M $N $K 1
     done
 done
